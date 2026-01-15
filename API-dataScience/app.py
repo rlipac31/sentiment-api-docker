@@ -37,7 +37,7 @@ class PredictResponse(BaseModel):
     resultados: List[Prediccion]
 
 # ===============================
-# LÓGICA ORIGINAL (NO TOCADA)
+# Predicción
 # ===============================
 def predecir_sentimiento(texto: str, umbral=0.52):
     texto_proc = limpiar_y_reforzar(texto)
@@ -72,7 +72,7 @@ def predecir_sentimiento(texto: str, umbral=0.52):
     return texto_proc, sentimiento, round(confianza, 2)
 
 # ===============================
-# ENDPOINT ÚNICO
+# Definir el ENDPOINT  /predict
 # ===============================
 @app.post("/predict", response_model=PredictResponse)
 def predict(data: PredictRequest):
