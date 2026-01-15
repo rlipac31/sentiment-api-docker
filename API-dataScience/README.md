@@ -16,10 +16,10 @@ API REST construida con FastAPI para clasificar sentimientos en reseñas y texto
 
 ## Funcionalidades
 
--Recibir uno o varios textos
--Limpiar y reforzar el texto
--Ejecutar el modelo ML
--Retornar sentimiento y confianza
+- Recibir uno o varios textos
+- Limpiar y reforzar el texto
+- Ejecutar el modelo ML
+- Retornar sentimiento y confianza
 
 ---
 ## Estructuta del Proyecto
@@ -126,21 +126,21 @@ Recibe uno o varios comentarios (Java se encarga del manejo por bloques y archiv
 ```
 ### Notas importantes
 
-  -El endpoint siempre es /predict
-  -Se espera una lista de textos
-  -La API no guarda resultados
-  -La API no maneja archivos
-  -Java controla:
-    batch
-    archivos CSV/TXT
-    estadísticas
-    exportaciones
+  - El endpoint siempre es /predict
+  - Se espera una lista de textos
+  - La API no guarda resultados
+  - La API no maneja archivos
+  - Java controla:
+      - batch
+      - archivos CSV/TXT
+      - estadísticas
+      - exportaciones
 
 ### Pruebas locales
-
+```
 D:\Tu_Repositorio>curl -X POST http://127.0.0.1:8000/predict -H "Content-Type: application/json" -d "{ \"textos\": [\"Me gusto mucho\", \"No vale la pena\"] }"
 {"resultados":[{"texto_original":"Me gusto mucho","texto_procesado":"me gusto mucho POSITIVO_SUAVE","sentimiento":"positivo","confianza":0.94},{"texto_original":"No vale la pena","texto_procesado":"no_vale la pena","sentimiento":"negativo","confianza":0.68}]}
-
+```
 ### 5. Verificar que los archivos del modelo estén presentes
 
 Asegúrate de que estos archivos estén en la raíz del proyecto:
