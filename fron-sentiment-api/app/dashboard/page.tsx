@@ -70,7 +70,8 @@ export default  function DashboardPage() {
       .map(line => ({ texto: line })); */
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/sentiment`, {
+      const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL;
+      const response = await fetch(`${apiUrl}/sentiment`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

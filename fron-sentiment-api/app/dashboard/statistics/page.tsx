@@ -71,7 +71,8 @@ export default function StatisticsPage() {
     console.log("numero de comentarios ", nunComent)
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stats?size=${nunComent}`, {
+      const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL;
+      const response = await fetch(`${apiUrl}/stats?size=${nunComent}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

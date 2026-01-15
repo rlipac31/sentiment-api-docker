@@ -96,7 +96,8 @@ if (!token) {
   formData.append('file', selectedFile);
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/sentiment/upload-csv`, {
+    const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL;
+    const response = await fetch(`${apiUrl}/sentiment/upload-csv`, {
       method: "POST",
       headers: { "Authorization": `Bearer ${token}` },
       body: formData,
