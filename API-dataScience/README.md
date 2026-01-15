@@ -1,25 +1,59 @@
-# 🎭 API de Análisis de Sentimiento
+# API de Análisis de Sentimiento
 
 API REST construida con FastAPI para clasificar sentimientos en reseñas y textos en español. El modelo utiliza Regresión Logística con vectorización TF-IDF, alcanzando un **83.5% de accuracy**.
 
 ---
 
-## 📋 Características
+## Características
 
-- ✅ Clasificación binaria: **positivo** / **negativo**
-- ✅ Modelo entrenado con 4,000 reseñas en español
-- ✅ Preprocesamiento automático (limpieza de texto + eliminación de stopwords)
-- ✅ API rápida y eficiente con FastAPI
-- ✅ Listo para desplegar en **Render** (plan gratuito)
+- Clasificación binaria: **positivo** / **negativo**
+- Modelo entrenado con 4,000 reseñas en español
+- Preprocesamiento automático (limpieza de texto)
+- API rápida y eficiente con FastAPI
+- Listo para desplegar en **Render** (plan gratuito)
 
 ---
 
-## 🚀 Instalación Local
+## Funcionalidades
+
+-Recibir uno o varios textos
+-Limpiar y reforzar el texto
+-Ejecutar el modelo ML
+-Retornar sentimiento y confianza
+
+---
+## Estructuta del Proyecto
+
+API-dataScience/
+├── app.py                 # API FastAPI (endpoint /predict)
+├── nlp_utils.py           # Limpieza y reglas lingüísticas
+├── model/
+│   ├── modelo.joblib      # Modelo entrenado
+│   └── vectorizador.joblib# TF-IDF
+├── requirements.txt
+└── README.md
+
+---
+
+## Tecnologías usadas
+
+-Python 3.10+
+-FastAPI
+-Scikit-learn
+-TF-IDF
+-Logistic Regression
+-Joblib
+-Uvicorn
+
+---
+
+
+## Instalación Local
 
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/joseorteha/API-dataScience.git
+git https://github.com/rlipac31/sentiment-api-docker.git
 cd TU_REPOSITORIO
 ```
 
@@ -41,116 +75,104 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Descargar stopwords de NLTK (solo primera vez)
+### 4. Ejecutar
 
 ```bash
-python -c "import nltk; nltk.download('stopwords')"
+python -m pip install uvicorn
 ```
+
+verificar: se espera Running uvicorn 0.40.0 with CPython 3.12.6 on Windows
+```bash
+python -m uvicorn --version
+```
+Ejecutar: Se espera INFO: Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+
+```bash
+python -m uvicorn app:app --reload
+```
+
+La API quedará disponible en:
+http://127.0.0.1:8000
+
+Swagger UI:
+http://127.0.0.1:8000/docs
+
+### Endpoint disponible
+
+POST /predict
+Recibe uno o varios comentarios (Java se encarga del manejo por bloques y archivos).
+
+### Request
+{
+  "textos": [
+    "El soporte tecnico es pésima, llevo tres días esperando una respuesta"
+  ]
+}
+
+### Response
+
+{
+  "resultados": [
+    {
+      "texto_original": "El soporte tecnico es pésima, llevo tres días esperando una respuesta",
+      "texto_procesado": "el soporte tecnico es pesima llevo tres dias esperando una respuesta NEGATIVO_FUERTE NEGATIVO_FUERTE NEGATIVO_FUERTE",
+      "sentimiento": "negativo",
+      "confianza": 1
+    }
+  ]
+}
+
+### Notas importantes
+
+  -El endpoint siempre es /predict
+  -Se espera una lista de textos
+  -La API no guarda resultados
+  -La API no maneja archivos
+  -Java controla:
+    batch
+    archivos CSV/TXT
+    estadísticas
+    exportaciones
+
+### Pruebas locales
+
+D:\Tu_Repositorio>curl -X POST http://127.0.0.1:8000/predict -H "Content-Type: application/json" -d "{ \"textos\": [\"Me gusto mucho\", \"No vale la pena\"] }"
+{"resultados":[{"texto_original":"Me gusto mucho","texto_procesado":"me gusto mucho POSITIVO_SUAVE","sentimiento":"positivo","confianza":0.94},{"texto_original":"No vale la pena","texto_procesado":"no_vale la pena","sentimiento":"negativo","confianza":0.68}]}
 
 ### 5. Verificar que los archivos del modelo estén presentes
 
 Asegúrate de que estos archivos estén en la raíz del proyecto:
-- `modelo_logistic_sentimiento_v3.joblib`
-- `vectorizador_tfidf_v3.joblib`
+- `modelo`
+- `vectorizador`
 
 ---
-
-## ▶️ Ejecutar la API localmente
-
-```bash
-python app.py
-```
-
-O con uvicorn directamente:
-
-```bash
-uvicorn app:app --reload --host 0.0.0.0 --port 8000
-```
-
-La API estará disponible en: **http://localhost:8000**
-
----
-
-## 📚 Documentación Interactiva
-
-Una vez que la API esté corriendo, accede a:
-
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-
----
-
-## 🧪 Probar el Endpoint `/predict`
-
-### Usando `curl` (terminal)
-
-```bash
-curl -X POST "http://localhost:8000/predict" \
-  -H "Content-Type: application/json" \
-  -d "{\"texto\": \"Esta película fue increíble, me encantó!\"}"
-```
-
-### Usando Python (requests)
-
-```python
-import requests
-
-url = "http://localhost:8000/predict"
-data = {"texto": "La comida estuvo horrible, nunca vuelvo"}
-
-response = requests.post(url, json=data)
-print(response.json())
-```
-
-### Usando Postman o Thunder Client
-
-**URL:** `http://localhost:8000/predict`  
-**Método:** `POST`  
-**Body (JSON):**
-
-```json
-{
-  "texto": "El servicio fue excelente, muy recomendado"
-}
-```
-
----
-
-## 📤 Respuesta del Endpoint
-
-```json
-{
-  "texto_original": "El servicio fue excelente, muy recomendado",
-  "texto_procesado": "servicio excelente recomendado",
-  "sentimiento": "positivo",
-  "confianza": 0.8523
-}
-```
 
 ### Descripción de los campos:
 
 | Campo | Descripción |
 |-------|-------------|
 | `texto_original` | El texto enviado sin modificar |
-| `texto_procesado` | Texto después de limpieza y eliminación de stopwords |
+| `texto_procesado` | Texto después de limpieza |
 | `sentimiento` | Clasificación: `positivo` o `negativo` |
 | `confianza` | Probabilidad de la predicción (0-1) |
 
 ---
 
-## 🌐 Desplegar en Render
+### Desplegar en Render
 
 ### Paso 1: Subir el proyecto a GitHub
 
 Asegúrate de tener estos archivos en tu repositorio:
 
 ```
-├── app.py
+API-dataScience/
+├── app.py                 # API FastAPI (endpoint /predict)
+├── nlp_utils.py           # Limpieza y reglas lingüísticas
+├── model/
+│   ├── modelo.joblib      # Modelo entrenado
+│   └── vectorizador.joblib# TF-IDF
 ├── requirements.txt
-├── modelo_logistic_sentimiento_v3.joblib
-├── vectorizador_tfidf_v3.joblib
-├── README.md
-└── .gitignore
+└── README.md
 ```
 
 ### Paso 2: Crear un nuevo Web Service en Render
@@ -205,15 +227,6 @@ curl -X POST "https://TU-API.onrender.com/predict" \
 
 ---
 
-## 🛠️ Stack Tecnológico
-
-- **Framework:** FastAPI 0.104.1
-- **Servidor:** Uvicorn 0.24.0
-- **ML:** Scikit-learn 1.3.2
-- **NLP:** NLTK 3.8.1
-- **Serialización:** Joblib 1.3.2
-
----
 
 ## 📝 Endpoints Disponibles
 
@@ -231,32 +244,12 @@ curl -X POST "https://TU-API.onrender.com/predict" \
 
 1. **Idioma:** El modelo está entrenado **solo en español**. Textos en otros idiomas darán resultados impredecibles.
 
-2. **Stopwords:** La API descarga automáticamente las stopwords de NLTK en el primer arranque.
+2. **Tamaño de archivos:** Los archivos `.joblib` deben estar en el repositorio. Si GitHub rechaza el push por tamaño, considera usar [Git LFS](https://git-lfs.github.com/).
 
-3. **Tamaño de archivos:** Los archivos `.joblib` deben estar en el repositorio. Si GitHub rechaza el push por tamaño, considera usar [Git LFS](https://git-lfs.github.com/).
-
-4. **Plan gratuito de Render:** El servicio puede entrar en "sleep mode" después de 15 minutos de inactividad. La primera petición después de esto puede tardar ~30 segundos.
+3. **Plan gratuito de Render:** El servicio puede entrar en "sleep mode" después de 15 minutos de inactividad. La primera petición después de esto puede tardar ~30 segundos.
 
 ---
 
-## 🐛 Troubleshooting
-
-### Error: "No module named 'nltk'"
-```bash
-pip install nltk
-```
-
-### Error: "Archivo .joblib no encontrado"
-Verifica que los archivos del modelo estén en la raíz del proyecto junto a `app.py`.
-
-### Error al descargar stopwords
-Ejecuta manualmente:
-```python
-import nltk
-nltk.download('stopwords')
-```
-
----
 
 ## 📄 Licencia
 
