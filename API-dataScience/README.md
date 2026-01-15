@@ -23,7 +23,7 @@ API REST construida con FastAPI para clasificar sentimientos en reseñas y texto
 
 ---
 ## Estructuta del Proyecto
-
+```
 API-dataScience/
 ├── app.py                 # API FastAPI (endpoint /predict)
 ├── nlp_utils.py           # Limpieza y reglas lingüísticas
@@ -32,7 +32,7 @@ API-dataScience/
 │   └── vectorizador.joblib# TF-IDF
 ├── requirements.txt
 └── README.md
-
+```
 ---
 
 ## Tecnologías usadas
