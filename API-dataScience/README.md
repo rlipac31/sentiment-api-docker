@@ -37,13 +37,13 @@ API-dataScience/
 
 ## Tecnologías usadas
 
--Python 3.10+
--FastAPI
--Scikit-learn
--TF-IDF
--Logistic Regression
--Joblib
--Uvicorn
+- Python 3.10+
+- FastAPI
+- Scikit-learn
+- TF-IDF
+- Logistic Regression
+- Joblib
+- Uvicorn
 
 ---
 
