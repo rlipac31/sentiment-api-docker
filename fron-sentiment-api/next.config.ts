@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-
+  output: 'standalone',
   /* config options here */
     images: {
     domains: ['https://lipa-sentiment-api.azurewebsites.net'], // Si usas imágenes externas
