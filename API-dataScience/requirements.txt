@@ -1,17 +1,5 @@
-# FastAPI y servidor web
-fastapi==0.115.6
-uvicorn[standard]==0.34.0
-
-# Machine Learning
-scikit-learn==1.6.1
-joblib==1.4.2
-
-# Procesamiento de texto
-nltk==3.9.1
-
-# Utilidades
-pydantic==2.10.5
-python-multipart==0.0.20
-
-# Para compatibilidad con Render
-gunicorn==23.0.0
+fastapi
+pydantic
+joblib
+scikit-learn
+numpy
