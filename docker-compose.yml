@@ -25,10 +25,10 @@ services:
       - "8090:8090"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:mysql://bs1entl09bwrzkykqu7f-mysql.services.clever-cloud.com/bs1entl09bwrzkykqu7f
-      - SPRING_DATASOURCE_USERNAME=u8tg2v0riwfmszc3
-      - SPRING_DATASOURCE_PASSWORD=aTIpbFsjMo9drpBEaQEg
-      - PALABRA_SECRETA_JWT=maylo2024
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - PALABRA_SECRETA_JWT=${JWT_SECRET}
       - PYTHON_API_URL=http://api-datascience:5000
     depends_on:
       - api-datascience
