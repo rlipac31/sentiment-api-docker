@@ -102,13 +102,15 @@ http://127.0.0.1:8000/docs
 POST /predict
 Recibe uno o varios comentarios (Java se encarga del manejo por bloques y archivos).
 
+```
 ### Request
 {
   "textos": [
     "El soporte tecnico es pésima, llevo tres días esperando una respuesta"
   ]
 }
-
+```
+```
 ### Response
 
 {
@@ -121,7 +123,7 @@ Recibe uno o varios comentarios (Java se encarga del manejo por bloques y archiv
     }
   ]
 }
-
+```
 ### Notas importantes
 
   -El endpoint siempre es /predict
