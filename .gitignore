@@ -1,0 +1,40 @@
+# Archivos de entorno con credenciales
+.env
+.env.local
+.env.production
+*.env
+
+# Archivos de configuración con credenciales
+**/application-local.properties
+**/application-docker.properties
+
+# Logs
+*.log
+logs/
+
+# Dependencias
+node_modules/
+**/target/
+**/__pycache__/
+*.pyc
+**/.venv/
+**/venv/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build outputs
+**/build/
+**/dist/
+**/.next/
+
+# Docker
+docker-compose.override.yml

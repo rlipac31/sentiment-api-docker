@@ -1,25 +1,59 @@
-# 🎭 API de Análisis de Sentimiento
+# API de Análisis de Sentimiento
 
-API REST construida con FastAPI para clasificar sentimientos en reseñas y textos en español. El modelo utiliza Regresión Logística con vectorización TF-IDF, alcanzando un **83.5% de accuracy**.
-
----
-
-## 📋 Características
-
-- ✅ Clasificación binaria: **positivo** / **negativo**
-- ✅ Modelo entrenado con 4,000 reseñas en español
-- ✅ Preprocesamiento automático (limpieza de texto + eliminación de stopwords)
-- ✅ API rápida y eficiente con FastAPI
-- ✅ Listo para desplegar en **Render** (plan gratuito)
+API REST construida con FastAPI para clasificar sentimientos en reseñas y textos en español. El modelo utiliza Regresión Logística con vectorización TF-IDF, alcanzando un **Accuracy: 0.8475  → 84.75%**.
 
 ---
 
-## 🚀 Instalación Local
+## Características
+
+- Clasificación binaria: **positivo** / **negativo**
+- Modelo entrenado con 4,000 reseñas en español
+- Preprocesamiento automático (limpieza de texto)
+- Flask: framework para crear la API REST.
+- Listo para desplegar en **Render** (plan gratuito)
+
+---
+
+## Funcionalidades
+
+- Recibir uno o varios textos
+- Limpiar y reforzar el texto
+- Ejecutar el modelo ML
+- Retornar sentimiento y confianza
+
+---
+## Estructuta del Proyecto
+```
+API-dataScience/
+├── app.py                 # API REST. (endpoint /predict)
+├── nlp_utils.py           # Limpieza y reglas lingüísticas
+├── model/
+│   ├── modelo.joblib      # Modelo entrenado
+│   └── vectorizador.joblib# TF-IDF
+├── requirements.txt
+└── README.md
+```
+---
+
+## Tecnologías usadas
+
+-Python: lenguaje principal.
+-Flask: framework para crear la API REST.
+-scikit-learn: para el modelo de Machine Learning.
+-TF-IDF (TfidfVectorizer): para vectorizar el texto.
+-joblib: para cargar el modelo y el vectorizador.
+-Expresiones regulares (re): para reglas y limpieza de texto.
+-NLP basado en reglas + ML: combinación de reglas lingüísticas y modelo estadístico.
+
+---
+
+
+## Instalación Local
 
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/joseorteha/API-dataScience.git
+git https://github.com/rlipac31/sentiment-api-docker.git
 cd TU_REPOSITORIO
 ```
 
@@ -27,8 +61,8 @@ cd TU_REPOSITORIO
 
 ```bash
 # Windows
-python -m venv venv
-venv\Scripts\activate
+
+D:\sentiment_clone\sentiment-api-docker\API-dataScience>venv\Scripts\activate
 
 # Linux/Mac
 python3 -m venv venv
@@ -41,116 +75,101 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Descargar stopwords de NLTK (solo primera vez)
+### 4. Ejecutar
 
 ```bash
-python -c "import nltk; nltk.download('stopwords')"
+(venv) D:\sentiment_clone\sentiment-api-docker\API-dataScience>python app.py
+```
+### Endpoint disponible
+
+POST /predict
+Recibe uno o varios comentarios (Java se encarga del manejo por bloques y archivos).
+
+```
+### Request
+{
+  "textos": [
+    "El soporte tecnico es pésima, llevo tres días esperando una respuesta"
+  ]
+}
+```
+```
+### Response
+
+{
+  "resultados": [
+    {
+      "texto": "El soporte tecnico es pésima, llevo tres días esperando una respuesta",
+      "prevision": "negativo",
+      "probabilidad": 1
+    }
+  ]
+}
+```
+### Notas importantes
+
+  - El endpoint siempre es /predict
+  - Se espera una lista de textos
+  - La API no guarda resultados
+  - La API no maneja archivos
+  - Java controla:
+      - batch
+      - archivos CSV/TXT
+      - estadísticas
+      - exportaciones
+
+### Pruebas locales
+```
+cliente-cmd
+D:\sentiment_clone\sentiment-api-docker\API-dataScience>pip install flask joblib
+
+(venv) D:\sentiment_clone\sentiment-api-docker\API-dataScience>python -m pip show flask
+
+(venv) D:\sentiment_clone\sentiment-api-docker\API-dataScience>python -m venv venv
+
+(venv) D:\sentiment_clone\sentiment-api-docker\API-dataScience>venv\Scripts\activate
+
+(venv) D:\sentiment_clone\sentiment-api-docker\API-dataScience>
+python test_api.py
+{'prevision': 'NEGATIVO', 'probabilidad': 1.0, 'texto': 'No volvería a comprar'}
+{'prevision': 'POSITIVO', 'probabilidad': 1.0, 'texto': 'era lo que esperaba'}
+{'prevision': 'NEGATIVO', 'probabilidad': 1.0, 'texto': 'No era lo que esperaba'}
+{'prevision': 'POSITIVO', 'probabilidad': 0.82, 'texto': 'Me encantó el servicio'}
 ```
 
 ### 5. Verificar que los archivos del modelo estén presentes
 
 Asegúrate de que estos archivos estén en la raíz del proyecto:
-- `modelo_logistic_sentimiento_v3.joblib`
-- `vectorizador_tfidf_v3.joblib`
+- `modelo`
+- `vectorizador`
 
 ---
-
-## ▶️ Ejecutar la API localmente
-
-```bash
-python app.py
-```
-
-O con uvicorn directamente:
-
-```bash
-uvicorn app:app --reload --host 0.0.0.0 --port 8000
-```
-
-La API estará disponible en: **http://localhost:8000**
-
----
-
-## 📚 Documentación Interactiva
-
-Una vez que la API esté corriendo, accede a:
-
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-
----
-
-## 🧪 Probar el Endpoint `/predict`
-
-### Usando `curl` (terminal)
-
-```bash
-curl -X POST "http://localhost:8000/predict" \
-  -H "Content-Type: application/json" \
-  -d "{\"texto\": \"Esta película fue increíble, me encantó!\"}"
-```
-
-### Usando Python (requests)
-
-```python
-import requests
-
-url = "http://localhost:8000/predict"
-data = {"texto": "La comida estuvo horrible, nunca vuelvo"}
-
-response = requests.post(url, json=data)
-print(response.json())
-```
-
-### Usando Postman o Thunder Client
-
-**URL:** `http://localhost:8000/predict`  
-**Método:** `POST`  
-**Body (JSON):**
-
-```json
-{
-  "texto": "El servicio fue excelente, muy recomendado"
-}
-```
-
----
-
-## 📤 Respuesta del Endpoint
-
-```json
-{
-  "texto_original": "El servicio fue excelente, muy recomendado",
-  "texto_procesado": "servicio excelente recomendado",
-  "sentimiento": "positivo",
-  "confianza": 0.8523
-}
-```
 
 ### Descripción de los campos:
 
 | Campo | Descripción |
 |-------|-------------|
-| `texto_original` | El texto enviado sin modificar |
-| `texto_procesado` | Texto después de limpieza y eliminación de stopwords |
+|  `texto_procesado` | Texto después de limpieza |
 | `sentimiento` | Clasificación: `positivo` o `negativo` |
 | `confianza` | Probabilidad de la predicción (0-1) |
 
 ---
 
-## 🌐 Desplegar en Render
+### Desplegar en Render
 
 ### Paso 1: Subir el proyecto a GitHub
 
 Asegúrate de tener estos archivos en tu repositorio:
 
 ```
-├── app.py
+API-dataScience/
+├── app.py                 # API  (endpoint /predict)
+├── nlp_utils.py           # Limpieza y reglas lingüísticas
+├── model/
+│   ├── modelo.joblib      # Modelo entrenado
+│   └── vectorizador.joblib# TF-IDF
 ├── requirements.txt
-├── modelo_logistic_sentimiento_v3.joblib
-├── vectorizador_tfidf_v3.joblib
-├── README.md
-└── .gitignore
+└── README.md
 ```
 
 ### Paso 2: Crear un nuevo Web Service en Render
@@ -196,8 +215,8 @@ curl -X POST "https://TU-API.onrender.com/predict" \
 | Métrica | Valor |
 |---------|-------|
 | **Accuracy** | 83.5% |
-| **Precision (positivo)** | 82% |
-| **Recall (positivo)** | 85% |
+| **Precision (positivo)** | 85% |
+| **Recall (positivo)** | 84% |
 | **F1-Score (positivo)** | 0.84 |
 | **Precision (negativo)** | 85% |
 | **Recall (negativo)** | 82% |
@@ -205,25 +224,13 @@ curl -X POST "https://TU-API.onrender.com/predict" \
 
 ---
 
-## 🛠️ Stack Tecnológico
-
-- **Framework:** FastAPI 0.104.1
-- **Servidor:** Uvicorn 0.24.0
-- **ML:** Scikit-learn 1.3.2
-- **NLP:** NLTK 3.8.1
-- **Serialización:** Joblib 1.3.2
-
----
 
 ## 📝 Endpoints Disponibles
 
 | Endpoint | Método | Descripción |
 |----------|--------|-------------|
-| `/` | GET | Información básica de la API |
-| `/health` | GET | Verificar estado de salud |
 | `/predict` | POST | Predecir sentimiento de un texto |
-| `/docs` | GET | Documentación Swagger |
-| `/redoc` | GET | Documentación ReDoc |
+
 
 ---
 
@@ -231,32 +238,12 @@ curl -X POST "https://TU-API.onrender.com/predict" \
 
 1. **Idioma:** El modelo está entrenado **solo en español**. Textos en otros idiomas darán resultados impredecibles.
 
-2. **Stopwords:** La API descarga automáticamente las stopwords de NLTK en el primer arranque.
+2. **Tamaño de archivos:** Los archivos `.joblib` deben estar en el repositorio. Si GitHub rechaza el push por tamaño, considera usar [Git LFS](https://git-lfs.github.com/).
 
-3. **Tamaño de archivos:** Los archivos `.joblib` deben estar en el repositorio. Si GitHub rechaza el push por tamaño, considera usar [Git LFS](https://git-lfs.github.com/).
-
-4. **Plan gratuito de Render:** El servicio puede entrar en "sleep mode" después de 15 minutos de inactividad. La primera petición después de esto puede tardar ~30 segundos.
+3. **Plan gratuito de Render:** El servicio puede entrar en "sleep mode" después de 15 minutos de inactividad. La primera petición después de esto puede tardar ~30 segundos.
 
 ---
 
-## 🐛 Troubleshooting
-
-### Error: "No module named 'nltk'"
-```bash
-pip install nltk
-```
-
-### Error: "Archivo .joblib no encontrado"
-Verifica que los archivos del modelo estén en la raíz del proyecto junto a `app.py`.
-
-### Error al descargar stopwords
-Ejecuta manualmente:
-```python
-import nltk
-nltk.download('stopwords')
-```
-
----
 
 ## 📄 Licencia
 
@@ -273,7 +260,7 @@ Desarrollado como proyecto de MLOps para desplegar modelos de Machine Learning e
 ## 🙏 Agradecimientos
 
 - Dataset: IMDB Reviews en Español
-- Framework: FastAPI
+- Framework: Flask
 - Hosting: Render
 
 ---

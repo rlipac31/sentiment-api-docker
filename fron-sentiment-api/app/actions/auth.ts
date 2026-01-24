@@ -8,7 +8,8 @@ export async function loginAction(prevState: any, formData: FormData) {
   const contrasenia = formData.get("contrasenia");
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
+    const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL;
+    const response = await fetch(`${apiUrl}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, contrasenia }),

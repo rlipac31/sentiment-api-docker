@@ -1,0 +1,61 @@
+services:
+  # API de DataScience (Python)
+  api-datascience:
+    build:
+      context: ./API-dataScience
+      dockerfile: Dockerfile
+    container_name: sentiment-api-python
+    ports:
+      - "5000:5000"
+    networks:
+      - sentiment-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend (Spring Boot)
+  backend:
+    build:
+      context: ./back_sentimenAPI_Hakaton
+      dockerfile: Dockerfile
+    container_name: sentiment-backend
+    ports:
+      - "8090:8090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - PALABRA_SECRETA_JWT=${JWT_SECRET}
+      - PYTHON_API_URL=http://api-datascience:5000
+    depends_on:
+      - api-datascience
+    networks:
+      - sentiment-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: ./fron-sentiment-api
+      dockerfile: Dockerfile
+    container_name: sentiment-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8090
+      - API_URL=http://backend:8090
+    depends_on:
+      - backend
+    networks:
+      - sentiment-network
+
+networks:
+  sentiment-network:
+    driver: bridge
