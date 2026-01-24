@@ -1,5 +1,4 @@
-fastapi
-pydantic
+flask
 joblib
 scikit-learn
 numpy
