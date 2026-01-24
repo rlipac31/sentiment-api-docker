@@ -1,6 +1,6 @@
 # API de Análisis de Sentimiento
 
-API REST construida con FastAPI para clasificar sentimientos en reseñas y textos en español. El modelo utiliza Regresión Logística con vectorización TF-IDF, alcanzando un **83.5% de accuracy**.
+API REST construida con FastAPI para clasificar sentimientos en reseñas y textos en español. El modelo utiliza Regresión Logística con vectorización TF-IDF, alcanzando un **Accuracy: 0.8475  → 84.75%**.
 
 ---
 
@@ -9,7 +9,7 @@ API REST construida con FastAPI para clasificar sentimientos en reseñas y texto
 - Clasificación binaria: **positivo** / **negativo**
 - Modelo entrenado con 4,000 reseñas en español
 - Preprocesamiento automático (limpieza de texto)
-- API rápida y eficiente con FastAPI
+- Flask: framework para crear la API REST.
 - Listo para desplegar en **Render** (plan gratuito)
 
 ---
@@ -25,7 +25,7 @@ API REST construida con FastAPI para clasificar sentimientos en reseñas y texto
 ## Estructuta del Proyecto
 ```
 API-dataScience/
-├── app.py                 # API FastAPI (endpoint /predict)
+├── app.py                 # API REST. (endpoint /predict)
 ├── nlp_utils.py           # Limpieza y reglas lingüísticas
 ├── model/
 │   ├── modelo.joblib      # Modelo entrenado
@@ -37,13 +37,13 @@ API-dataScience/
 
 ## Tecnologías usadas
 
-- Python 3.10+
-- FastAPI
-- Scikit-learn
-- TF-IDF
-- Logistic Regression
-- Joblib
-- Uvicorn
+-Python: lenguaje principal.
+-Flask: framework para crear la API REST.
+-scikit-learn: para el modelo de Machine Learning.
+-TF-IDF (TfidfVectorizer): para vectorizar el texto.
+-joblib: para cargar el modelo y el vectorizador.
+-Expresiones regulares (re): para reglas y limpieza de texto.
+-NLP basado en reglas + ML: combinación de reglas lingüísticas y modelo estadístico.
 
 ---
 
@@ -61,8 +61,8 @@ cd TU_REPOSITORIO
 
 ```bash
 # Windows
-python -m venv venv
-venv\Scripts\activate
+
+D:\sentiment_clone\sentiment-api-docker\API-dataScience>venv\Scripts\activate
 
 # Linux/Mac
 python3 -m venv venv
@@ -78,25 +78,8 @@ pip install -r requirements.txt
 ### 4. Ejecutar
 
 ```bash
-python -m pip install uvicorn
+(venv) D:\sentiment_clone\sentiment-api-docker\API-dataScience>python app.py
 ```
-
-verificar: se espera Running uvicorn 0.40.0 with CPython 3.12.6 on Windows
-```bash
-python -m uvicorn --version
-```
-Ejecutar: Se espera INFO: Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-
-```bash
-python -m uvicorn app:app --reload
-```
-
-La API quedará disponible en:
-http://127.0.0.1:8000
-
-Swagger UI:
-http://127.0.0.1:8000/docs
-
 ### Endpoint disponible
 
 POST /predict
@@ -116,10 +99,9 @@ Recibe uno o varios comentarios (Java se encarga del manejo por bloques y archiv
 {
   "resultados": [
     {
-      "texto_original": "El soporte tecnico es pésima, llevo tres días esperando una respuesta",
-      "texto_procesado": "el soporte tecnico es pesima llevo tres dias esperando una respuesta NEGATIVO_FUERTE NEGATIVO_FUERTE NEGATIVO_FUERTE",
-      "sentimiento": "negativo",
-      "confianza": 1
+      "texto": "El soporte tecnico es pésima, llevo tres días esperando una respuesta",
+      "prevision": "negativo",
+      "probabilidad": 1
     }
   ]
 }
@@ -138,9 +120,23 @@ Recibe uno o varios comentarios (Java se encarga del manejo por bloques y archiv
 
 ### Pruebas locales
 ```
-D:\Tu_Repositorio>curl -X POST http://127.0.0.1:8000/predict -H "Content-Type: application/json" -d "{ \"textos\": [\"Me gusto mucho\", \"No vale la pena\"] }"
-{"resultados":[{"texto_original":"Me gusto mucho","texto_procesado":"me gusto mucho POSITIVO_SUAVE","sentimiento":"positivo","confianza":0.94},{"texto_original":"No vale la pena","texto_procesado":"no_vale la pena","sentimiento":"negativo","confianza":0.68}]}
+cliente-cmd
+D:\sentiment_clone\sentiment-api-docker\API-dataScience>pip install flask joblib
+
+(venv) D:\sentiment_clone\sentiment-api-docker\API-dataScience>python -m pip show flask
+
+(venv) D:\sentiment_clone\sentiment-api-docker\API-dataScience>python -m venv venv
+
+(venv) D:\sentiment_clone\sentiment-api-docker\API-dataScience>venv\Scripts\activate
+
+(venv) D:\sentiment_clone\sentiment-api-docker\API-dataScience>
+python test_api.py
+{'prevision': 'NEGATIVO', 'probabilidad': 1.0, 'texto': 'No volvería a comprar'}
+{'prevision': 'POSITIVO', 'probabilidad': 1.0, 'texto': 'era lo que esperaba'}
+{'prevision': 'NEGATIVO', 'probabilidad': 1.0, 'texto': 'No era lo que esperaba'}
+{'prevision': 'POSITIVO', 'probabilidad': 0.82, 'texto': 'Me encantó el servicio'}
 ```
+
 ### 5. Verificar que los archivos del modelo estén presentes
 
 Asegúrate de que estos archivos estén en la raíz del proyecto:
@@ -153,8 +149,7 @@ Asegúrate de que estos archivos estén en la raíz del proyecto:
 
 | Campo | Descripción |
 |-------|-------------|
-| `texto_original` | El texto enviado sin modificar |
-| `texto_procesado` | Texto después de limpieza |
+|  `texto_procesado` | Texto después de limpieza |
 | `sentimiento` | Clasificación: `positivo` o `negativo` |
 | `confianza` | Probabilidad de la predicción (0-1) |
 
@@ -168,7 +163,7 @@ Asegúrate de tener estos archivos en tu repositorio:
 
 ```
 API-dataScience/
-├── app.py                 # API FastAPI (endpoint /predict)
+├── app.py                 # API  (endpoint /predict)
 ├── nlp_utils.py           # Limpieza y reglas lingüísticas
 ├── model/
 │   ├── modelo.joblib      # Modelo entrenado
@@ -220,8 +215,8 @@ curl -X POST "https://TU-API.onrender.com/predict" \
 | Métrica | Valor |
 |---------|-------|
 | **Accuracy** | 83.5% |
-| **Precision (positivo)** | 82% |
-| **Recall (positivo)** | 85% |
+| **Precision (positivo)** | 85% |
+| **Recall (positivo)** | 84% |
 | **F1-Score (positivo)** | 0.84 |
 | **Precision (negativo)** | 85% |
 | **Recall (negativo)** | 82% |
@@ -234,11 +229,8 @@ curl -X POST "https://TU-API.onrender.com/predict" \
 
 | Endpoint | Método | Descripción |
 |----------|--------|-------------|
-| `/` | GET | Información básica de la API |
-| `/health` | GET | Verificar estado de salud |
 | `/predict` | POST | Predecir sentimiento de un texto |
-| `/docs` | GET | Documentación Swagger |
-| `/redoc` | GET | Documentación ReDoc |
+
 
 ---
 
@@ -268,7 +260,7 @@ Desarrollado como proyecto de MLOps para desplegar modelos de Machine Learning e
 ## 🙏 Agradecimientos
 
 - Dataset: IMDB Reviews en Español
-- Framework: FastAPI
+- Framework: Flask
 - Hosting: Render
 
 ---
